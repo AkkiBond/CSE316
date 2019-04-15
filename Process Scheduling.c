@@ -1,11 +1,13 @@
 //Process scheduling
 #include<stdio.h>
 
-
-void findCompletionTime(int pr[],int n,int b[],int comp[])
+//Function to calculate the completion time.
+void findCompletionTime(int pr[],int n,int br[],int comp[])
 {
     int bb[n];
-    int bb[0] = 0;
+    bb[0] = 0;
+    int b[n];
+    memcpy(b, br, n*sizeof(int));
     for(int i=1;i<n;i++)
     {
         if(b[i]<=6)
@@ -19,22 +21,15 @@ void findCompletionTime(int pr[],int n,int b[],int comp[])
 
             if(b[i]<=10)
             {
-                comp[i] = b[i] + bb[i];
+                comp[i] = b[i] + bb[i] + comp[i-1];
 
             }
             else
             {
                 bb[i] += 10;
                 b[i] = b[i] - 10;
-                int m = b[1];
-                for(int j=1;j<n;j++)
-                {
-                    if(m<b[i])
-                    {
-                        m = b[i];
+                comp[i] = b[i]+bb[i]+comp[i-1];
 
-                    }
-                }
             }
         }
     }
@@ -46,7 +41,7 @@ void findTurnAroundTime( int processes[], int n,
 				int a[], int c[], int tat[])
 {
 	// calculating turnaround time by adding
-	// bt[i] + wt[i]
+	// comp[i] - arr[i]
 
 	for (int i = 1; i < n ; i++)
 		tat[i] = c[i] - a[i];
@@ -70,17 +65,19 @@ void findWaitingTime(int processes[], int n,
 void findavgTime( int processes[], int n,int at[], int bt[])
 {
 	int wt[n], tat[n], total_wt = 0, total_tat = 0;
-    int comp[n] = {0};
+    int comp[n];
+    comp[0] = 0;
 	//Function to find waiting time of all processes
 	findWaitingTime(processes, n, bt, wt);
 
+	findCompletionTime(processes,n,bt,comp);
 	//Function to find turn around time for all processes
 	findTurnAroundTime(processes, n, at, comp, tat);
 
 	//Display processes along with all details
 //	cout << "Processes "<< " Burst time "
 //		<< " Waiting time " << " Turn around time\n";
-		printf("Processes  Arrival time  Burst time  Waiting time  Turn around time\n");
+		printf("\n\nProcesses  Arrival time  Burst time Completion Time  Waiting time  Turn around time\n");
 
 	// Calculate total waiting time and total turn
 	// around time
@@ -88,29 +85,17 @@ void findavgTime( int processes[], int n,int at[], int bt[])
 	{
 		total_wt = total_wt + wt[i];
 		total_tat = total_tat + tat[i];
-//		cout << " " << i+1 << "\t\t" << bt[i] <<"\t "
-//			<< wt[i] <<"\t\t " << tat[i] <<endl;
-			printf("\n\n %d\t\t%d\t\t%d\t %d\t\t %d\n",i,at[i],bt[i],wt[i],tat[i]);
+		printf("%d\t\t%d\t\t%d\t%d\t\t  %d\t\t %d\n",i,at[i],bt[i],comp[i],wt[i],tat[i]);
 	}
-
-//	cout << "Average waiting time = "
-//		<< (float)total_wt / (float)n;
-		printf("Average waiting time = %4.2f",(float)total_wt / (float)(n-1);
+        printf("\nAverage waiting time = %4.2f",(float)total_wt / (float)(n-1));
 //	cout << "\nAverage turn around time = "
 //		<< (float)total_tat / (float)n;
-        printf("Average turn around time = %4.2f",(float)total_tat / (float)(n-1);
+        printf("\nAverage turn around time = %4.2f",(float)total_tat / (float)(n-1));
 }
 
 // Driver code
 int main()
 {
-	//process id's
-//	int processes[] = { 1, 2, 3};
-//	int n = sizeof processes / sizeof processes[0];
-//
-//	//Burst time of all processes
-//	int burst_time[] = {10, 5, 8};
-
     int n;
     printf("Please enter the no. of processes:- ");
     scanf("%d",&n);
@@ -118,18 +103,18 @@ int main()
     int at[nn];
     int bt[nn];
     int p[nn];
-    int at[0] = 0;
-    int bt[0] = 0;
-    int p[0] = 0;
+    at[0] = 0;
+    bt[0] = 0;
+    p[0] = 0;
 
     for(int i=1;i<nn;i++)
     {
-        printf("Enter Details for Process %d:-\n",i+1);
+        printf("\n+++++++++++++++-++++++++++++++++++++++++\nEnter Details for Process %d:-\n",i);
         printf("Arrival Time:-");
         scanf("%d",&at[i]);
-        printf("Burst Time:-");
+        printf("\nBurst Time:-");
         scanf("%d",&bt[i]);
-        p[i] = i+1;
+        p[i] = i;
     }
 
 	findavgTime(p, nn, at, bt);
