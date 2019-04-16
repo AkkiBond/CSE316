@@ -100,10 +100,10 @@ int main()
     printf("Please enter the no. of processes:- ");
     scanf("%d",&n);
     int nn = n+1;
-    int at[nn];
-    int bt[nn];
-    int p[nn];
-    at[0] = 0;
+    int at[nn]; //Array to store the arrial time of processes
+    int bt[nn];	//Array to store the burst time of processes
+    int p[nn];  //Array to store the processes
+    at[0] = 0;  
     bt[0] = 0;
     p[0] = 0;
 
