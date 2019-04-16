@@ -18,7 +18,7 @@ int a[50],frame[50];
                 frame[i]= (rand() % 101) + 500; //For assigning the random frame numbers.
             }
 
-            printf("Page Number\tFrame Number\n");
+            printf("Page Number\tFrame Number\n"); // which shows the format
 
             for(i=1;i<=n;i++)
             {
